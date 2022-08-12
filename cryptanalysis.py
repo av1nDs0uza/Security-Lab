@@ -1,98 +1,55 @@
-def printString(S, N):
-     
-    # Stores final 5 possible deciphered
-    # plaintext
-    plaintext = [None] * 5
-     
-    # Store the frequency of each letter in
-    # cipher text
-    freq = [0] * 26
-     
-    # Stores the frequency of each letter
-    # in cipher text in descending order
-    freqSorted = [None] * 26
-     
-    # Store which alphabet is used already
-    used = [0] * 26
-     
-    # Traverse the string S
-    for i in range(N):
-        if S[i] != ' ':
-            freq[ord(S[i]) - 65] += 1
-             
-    # Copy the frequency array        
-    for i in range(26):
-        freqSorted[i] = freq[i]
-         
-    # Stores the string formed from
-    # concatenating the english letters
-    # in the decreasing frequency in the
-    # english language    
-    T = "ETAOINSHRDLCUMWFGYPBVKJXQZ"
-     
-    # Sort the array in descending order
-    freqSorted.sort(reverse = True)
-     
-    # Iterate over the range [0, 5]
-    for i in range(5):
-        ch = -1
-         
-        # Iterate over the range [0, 26]
-        for j in range(26):
-            if freqSorted[i] == freq[j] and used[j] == 0:
-                used[j] = 1
-                ch = j
-                break
-             
-        if ch == -1:
-            break
-         
-        # Store the numerical equivalent of letter
-        # at ith index of array letter_frequency
-        x = ord(T[i]) - 65
-         
-        # Calculate the probable shift used
-        # in monoalphabetic cipher
-        x = x - ch
-         
-        # Temporary string to generate one
-        # plaintext at a time
-        curr = ""
-         
-        # Generate the probable ith plaintext
-        # string using the shift calculated above
-        for k in range(N):
-             
-            # Insert whitespaces as it is
-            if S[k] == ' ':
-                curr += " "
-                continue
-             
-            # Shift the kth letter of the
-            # cipher by x
-            y = ord(S[k]) - 65
-            y += x
-             
-            if y < 0:
-                y += 26
-            if y > 25:
-                y -= 26
-             
-            # Add the kth calculated/shifted
-            # letter to temporary string    
-            curr += chr(y + 65)
-             
-        plaintext[i] = curr
-     
-    # Print the generated 5 possible plaintexts    
-    for i in range(5):
-        print(plaintext[i])
- 
-# Driver code
- 
-# Given string
-S = "slaztlla"
-N = len(S)
- 
-# Function Call
-printString(S, N)
+MAX_KEY_SIZE = 26
+
+def getMode():
+    while True:
+        print('Do you wish to encrypt or decrypt a message?')
+        mode = input().lower()
+        if mode in 'encrypt e decrypt d'.split():
+            return mode
+        else:
+            print('Enter either "encrypt" or "e" or "decrypt" or "d".')
+
+def getMessage():
+    print('Enter your message:')
+    return input()
+
+def getKey():
+    key = 0
+    while True:
+        print('Enter the key number (1-%s)' % (MAX_KEY_SIZE))
+        key = int(input())
+        if (key >= 1 and key <= MAX_KEY_SIZE):
+            return key
+
+def getTranslatedMessage(mode, message, key):
+    if mode[0] == 'd':
+        key = -key
+    translated = ''
+
+    for symbol in message:
+        if symbol.isalpha():
+            num = ord(symbol)
+            num += key
+
+            if symbol.isupper():
+                if num > ord('Z'):
+                    num -= 26
+                elif num < ord('A'):
+                    num += 26
+            elif symbol.islower():
+                if num > ord('z'):
+                    num -= 26
+                elif num < ord('a'):
+                    num += 26
+
+            translated += chr(num)
+        else:
+            translated += symbol
+    return translated
+
+mode = getMode()
+message = getMessage()
+key = getKey()
+
+print('Your translated text is:')
+print(getTranslatedMessage(mode, message, key))

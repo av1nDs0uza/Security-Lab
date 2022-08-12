@@ -78,7 +78,7 @@ def playfair(key, message, encrypt=True):
     return cipher_text
 if __name__=='__main__':
     # a sample of encryption and decryption
-    print ('Encripting')
-    print ( playfair('secret', 'my secret message'))
+    print ('Encrypting')
+    print ( playfair('secret', 'avin dsouza'))
     print ('Decrypting')
-    print ( playfair('secret', 'LZECRTCSITCVAHBT', False))
+    print ( playfair('secret', 'HSHOACPNVG', False))
